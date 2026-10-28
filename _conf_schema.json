@@ -10,15 +10,25 @@
     "description": "小米语音合成 API Base",
     "default": "https://api.xiaomimimo.com/v1"
   },
-  "linwan_director": {
-    "type": "text",
-    "description": "林晚专属音色导演词 (音色 A: 清爽生活知己音)",
-    "default": "24岁普通年轻女性，音色清爽干净，音调自然平稳，完全没有撒娇、卖萌、娇嗲或做作感。发音自然放松，语调平实真诚，就像生活中普通朋友在咖啡厅对面坐着随口闲聊，真实朴素。"
+  "linwan_voice": {
+    "type": "string",
+    "description": "林晚发音底座 (推荐官方棚录音色: 冰糖)",
+    "default": "冰糖"
   },
-  "mumu_director": {
+  "linwan_style": {
     "type": "text",
-    "description": "沐沐专属音色导演词 (音色 B-2: 清亮柔甜治愈音)",
-    "default": "23-24岁年轻女性，音色清亮柔和、温润细腻，中高频通透，带有自然的柔甜质感。语速轻柔平稳，咬字大方舒适，带着一种发自内心的体贴与关照，真诚平视，绝不做作，令人感到彻底放松和心安。"
+    "description": "林晚发音风格微调指令",
+    "default": "温和自然，生活化口语断句，平视舒适，落落大方，绝无广播腔和客服腔。"
+  },
+  "mumu_voice": {
+    "type": "string",
+    "description": "沐沐发音底座 (推荐官方棚录音色: 茉莉)",
+    "default": "茉莉"
+  },
+  "mumu_style": {
+    "type": "text",
+    "description": "沐沐发音风格微调指令",
+    "default": "轻柔温润，中高频通透，清甜自然，平易近人，绝无做作卖萌。"
   },
   "default_probability": {
     "type": "float",
