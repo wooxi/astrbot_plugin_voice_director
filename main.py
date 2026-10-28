@@ -125,4 +125,4 @@ class VoiceDirectorPlugin(Star):
             return
 
         result.chain = [Record(file=audio_path, url=audio_path, text=plain_text)]
-        logger.info(f"[VoiceDirector] 成功转换为纯语音消息: {audio_path}")\n
+        logger.info(f"[VoiceDirector] 成功转换为纯语音消息: {audio_path}")
