@@ -1,10 +1,11 @@
 name: voice_director
 author: wooxi
-version: v1.0.0
-description: 多角色自适应专属音色分发与智能语音导演插件，基于小米 MiMo 语音模型，支持意图强触发、声线自适应分发与多端优化。
+version: v1.2.0
+description: 多角色自适应专属音色分发与智能语音导演插件，基于 BreezeBlue 高表现力语音大模型，支持音色克隆 Voice ID 绑定、自然语言导演与多端自适应。
 repo: https://github.com/wooxi/astrbot_plugin_voice_director
 tags:
   - tts
   - voice
-  - xiaomi
-  - persona\n
+  - breezeblue
+  - voice-cloning
+  - persona

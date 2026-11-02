@@ -1,34 +1,35 @@
 {
-  "api_key": {
+  "engine": {
     "type": "string",
-    "description": "小米语音合成 API Key (留空则自动从 AstrBot 全局的小米配置中读取)",
-    "default": "",
+    "description": "语音合成后端引擎",
+    "default": "breezeblue",
+    "options": ["breezeblue", "mimo"]
+  },
+  "breeze_api_key": {
+    "type": "string",
+    "description": "BreezeBlue API Key (brz_...)",
+    "default": "brz_RIpSj5DDMmsx7EHzVjPXisRK2BkWTgbi",
     "is_secret": true
   },
-  "api_base": {
+  "linwan_voice_id": {
     "type": "string",
-    "description": "小米语音合成 API Base",
-    "default": "https://api.xiaomimimo.com/v1"
+    "description": "林晚专属克隆 Voice ID",
+    "default": "voc_yu7t5b4tx7c7"
   },
-  "linwan_voice": {
-    "type": "string",
-    "description": "林晚发音底座 (推荐官方棚录音色: 冰糖)",
-    "default": "冰糖"
-  },
-  "linwan_style": {
+  "linwan_instructions": {
     "type": "text",
-    "description": "林晚发音风格微调指令",
-    "default": "温和自然，生活化口语断句，平视舒适，落落大方，绝无广播腔和客服腔。"
+    "description": "林晚语气导演指令 (BreezeBlue)",
+    "default": "知性温和，语气从容放松，落落大方，像日常发微信语音一样自然随性。"
   },
-  "mumu_voice": {
+  "mumu_voice_id": {
     "type": "string",
-    "description": "沐沐发音底座 (推荐官方棚录音色: 茉莉)",
-    "default": "茉莉"
+    "description": "沐沐专属克隆 Voice ID",
+    "default": "voc_xy2p77mb2qs6"
   },
-  "mumu_style": {
+  "mumu_instructions": {
     "type": "text",
-    "description": "沐沐发音风格微调指令",
-    "default": "轻柔温润，中高频通透，清甜自然，平易近人，绝无做作卖萌。"
+    "description": "沐沐语气导演指令 (BreezeBlue)",
+    "default": "轻快甜美，带一点点自然随性的笑意，像好朋友发语音聊天。"
   },
   "default_probability": {
     "type": "float",
