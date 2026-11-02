@@ -1,7 +1,7 @@
 name: voice_director
 author: wooxi
-version: v1.2.0
-description: 多角色自适应专属音色分发与智能语音导演插件，基于 BreezeBlue 高表现力语音大模型，支持音色克隆 Voice ID 绑定、自然语言导演与多端自适应。
+version: v1.2.1
+description: 多角色自适应专属音色分发与智能语音导演插件，基于 BreezeBlue 高表现力语音大模型，支持音色克隆 Voice ID 绑定、动态情绪导演指令与多端自适应。
 repo: https://github.com/wooxi/astrbot_plugin_voice_director
 tags:
   - tts

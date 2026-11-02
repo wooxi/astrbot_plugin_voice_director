@@ -9,7 +9,7 @@ from astrbot.api.message_components import Plain, Record, Image, At, Json
 from astrbot.api import logger
 from astrbot.api.star import Context, Star, register
 
-@register("voice_director", "wooxi", "多角色自适应专属音色分发与智能语音导演插件（支持BreezeBlue克隆音色）", "v1.2.0")
+@register("voice_director", "wooxi", "多角色自适应专属音色分发与智能语音导演插件（支持BreezeBlue与动态情绪导演）", "v1.2.1")
 class VoiceDirectorPlugin(Star):
     def __init__(self, context: Context, config: dict = None):
         super().__init__(context)
@@ -27,9 +27,27 @@ class VoiceDirectorPlugin(Star):
         self.probability = float(self.config.get("default_probability", 0.4))
         
         self.voice_intent_keywords = [
-            "发语音", "听声音", "发个语音", "说句话", "听听声音", "发段语音", "说来听听", "开口说话", "语音", "发一条语音"
+            "发语音", "听声音", "发个语音", "说句话", "听听声音", "发段语音", "说来听听", "开口说话", "语音", "发一条语音", "唱首歌", "唱个歌", "唱两句"
         ]
-        logger.info(f"[VoiceDirector] 专属音色导演插件 v1.2.0 已就绪（BreezeBlue专属克隆模式）！")
+        logger.info(f"[VoiceDirector] 专属音色导演插件 v1.2.1 已就绪（动态情绪导演模式）！")
+
+    def _resolve_dynamic_instructions(self, text: str, base_instructions: str) -> str:
+        """根据文本中的官方音频标签，动态增强 BreezeBlue 的演播指令"""
+        extra_hints = []
+        if "[唱歌]" in text or "[哼歌]" in text:
+            extra_hints.append("当前正在轻声哼唱歌曲，富有旋律感和柔和的节奏感，歌声自然甜美")
+        elif "[耳语]" in text:
+            extra_hints.append("用近距离轻声耳语的方式说话，音量偏轻，极具亲近与私密感")
+        elif "[打哈欠]" in text or "[叹气]" in text:
+            extra_hints.append("声音带有一点点慵懒和疲倦，像夜深了靠在沙发上随口聊天，自然舒缓")
+        elif "[轻笑]" in text or "[笑]" in text or "[咯咯笑]" in text:
+            extra_hints.append("说话时带着自然轻柔的笑意，嘴角含笑，语气欢快随性")
+        elif "[冷笑]" in text or "[啧嘴]" in text:
+            extra_hints.append("语气带着一点点无语和打趣的小吐槽，生动鲜活")
+
+        if extra_hints:
+            return f"{base_instructions}，{；.join(extra_hints)}"
+        return base_instructions
 
     async def _generate_breeze_audio(self, text: str, voice_id: str, instructions: str) -> str | None:
         if not self.breeze_api_key:
@@ -41,10 +59,13 @@ class VoiceDirectorPlugin(Star):
             "Authorization": f"Bearer {self.breeze_api_key}",
             "Content-Type": "application/json"
         }
+        
+        dynamic_instructions = self._resolve_dynamic_instructions(text, instructions)
         payload = {
             "text": text,
-            "instructions": instructions
+            "instructions": dynamic_instructions
         }
+        logger.info(f"[VoiceDirector] 提交演播指令 -> {dynamic_instructions}")
         try:
             async with aiohttp.ClientSession() as session:
                 async with session.post(url, headers=headers, json=payload, timeout=25) as resp:
@@ -73,25 +94,29 @@ class VoiceDirectorPlugin(Star):
         if not plain_text:
             return
 
+        # 1. 检查静默暗号
         normalized = re.sub(r"[\[\]\s\-_]", "", plain_text).upper()
         if normalized in {"PASS", "SILENCE", "潜水", "IGNORE"}:
             logger.info("[VoiceDirector] 智能体静默决策，清空消息链")
             result.chain = []
             return
 
+        # 2. 判断是否应该触发语音
         user_msg = event.message_str or ""
         is_requested = any(w in user_msg for w in self.voice_intent_keywords)
-        has_tags = any(t in plain_text for t in ["(", "（", "[", "【"])
+        has_tags = any(t in plain_text for t in ["[", "【", "唱歌", "哼歌"])
         roll_hit = random.random() <= self.probability
 
         if not (is_requested or has_tags or roll_hit):
             return
 
+        # 3. 平台差异化处理 (微信端保持纯文本，防丢消息)
         platform_name = event.get_platform_name()
         if "weixin" in platform_name:
             logger.debug("[VoiceDirector] 微信平台，保持纯文本发送，避免丢消息")
             return
 
+        # 4. 识别角色并选择专属克隆音色
         umo = event.unified_msg_origin.lower()
         if "mumu" in umo:
             voice_id = self.mumu_voice_id
